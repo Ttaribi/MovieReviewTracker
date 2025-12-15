@@ -10,10 +10,11 @@ A web application that lets users search for movies using the **OMDb API** and v
 - **Open Movie Database (OMDb) API:** https://www.omdbapi.com/
 
 ## Key Features
-- Search movies by title using an external API (OMDb)
+- Search for movies by title using the OMDb API
 - View movie results/details returned by the API
-- Create and view personal movie reviews stored in MongoDB
-- Retrieve saved reviews from the database
+- Create reviews for movies and store them in MongoDB
+- View saved reviews from the database
+- **Delete reviews** when you no longer want them
 
 ## Tech Overview
 - External movie data: **OMDb API**
