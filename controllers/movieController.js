@@ -16,6 +16,8 @@ const searchMovies = async (req, res) => {
       });
     }
 
+    console.log('Searching for:', q, 'with API key:', OMDB_API_KEY ? 'SET' : 'NOT SET');
+
     const response = await axios.get(OMDB_BASE_URL, {
       params: {
         apikey: OMDB_API_KEY,
@@ -24,19 +26,25 @@ const searchMovies = async (req, res) => {
       }
     });
 
+    console.log('OMDB Response:', response.data.Response, 'Count:', response.data.Search?.length || 0);
+
     if (response.data.Response === 'False') {
-      return res.status(404).json({
-        success: false,
-        error: response.data.Error || 'No movies found'
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        data: []
       });
     }
 
+    const movies = response.data.Search || [];
+    
     res.status(200).json({
       success: true,
-      count: response.data.Search ? response.data.Search.length : 0,
-      data: response.data.Search || []
+      count: movies.length,
+      data: movies
     });
   } catch (error) {
+    console.error('Search error:', error.message);
     res.status(500).json({
       success: false,
       error: error.message
