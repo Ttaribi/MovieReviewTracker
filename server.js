@@ -25,7 +25,6 @@ const Movie = require('./models/Movie');
 app.use('/api/movies', moviesRoutes);
 app.use('/api/reviews', reviewsRoutes);
 
-// Home page - shows search and recent reviews
 app.get('/', async (req, res) => {
   try {
     const reviews = await Review.find()
@@ -38,7 +37,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-// All reviews page
 app.get('/reviews', async (req, res) => {
   try {
     const reviews = await Review.find()
@@ -50,15 +48,12 @@ app.get('/reviews', async (req, res) => {
   }
 });
 
-// Movie detail page
 app.get('/movie/:imdbID', async (req, res) => {
   try {
     const { imdbID } = req.params;
     
-    // Try to find movie in database first
     let movie = await Movie.findOne({ imdbID });
     
-    // If not found, fetch from OMDB API
     if (!movie) {
       const response = await axios.get('http://www.omdbapi.com/', {
         params: {
@@ -88,7 +83,6 @@ app.get('/movie/:imdbID', async (req, res) => {
       );
     }
     
-    // Get reviews for this movie
     const reviews = await Review.find({ movieId: movie._id })
       .sort({ createdAt: -1 });
     
@@ -99,12 +93,10 @@ app.get('/movie/:imdbID', async (req, res) => {
   }
 });
 
-// Submit review for a movie
 app.post('/movie/:imdbID/review', async (req, res) => {
   try {
     const { imdbID, title, year, poster, reviewerName, rating, comment } = req.body;
     
-    // Find or create movie
     let movie = await Movie.findOne({ imdbID });
     if (!movie) {
       movie = await Movie.create({
@@ -115,7 +107,6 @@ app.post('/movie/:imdbID/review', async (req, res) => {
       });
     }
     
-    // Create review
     await Review.create({
       movieId: movie._id,
       reviewerName,
@@ -126,7 +117,6 @@ app.post('/movie/:imdbID/review', async (req, res) => {
     res.redirect(`/movie/${imdbID}`);
   } catch (error) {
     console.error(error);
-    // Get movie and reviews to re-render with error
     const movie = await Movie.findOne({ imdbID: req.params.imdbID });
     const reviews = movie ? await Review.find({ movieId: movie._id }).sort({ createdAt: -1 }) : [];
     res.render('movie', { 
