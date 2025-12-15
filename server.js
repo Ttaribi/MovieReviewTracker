@@ -21,8 +21,14 @@ const reviewsRoutes = require('./routes/reviews');
 app.use('/movies', moviesRoutes);
 app.use('/reviews', reviewsRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Server is running! MongoDB connection: Check console');
+app.get('/', async (req, res) => {
+  try {
+    const Review = require('./models/Review');
+    const reviews = await Review.find().populate('movieId').sort({ createdAt: -1 }).limit(6);
+    res.render('index', { reviews });
+  } catch (error) {
+    res.render('index', { reviews: [] });
+  }
 });
 
 app.use((err, req, res, next) => {
