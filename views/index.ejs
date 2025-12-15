@@ -1,0 +1,155 @@
+<%- include('partials/header', { title: 'Home', activePage: 'home' }) %>
+
+<section class="hero">
+  <div class="container">
+    <h1>Discover & Review Movies</h1>
+    <p>Search for any movie and share your thoughts with the world.</p>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search for a movie..." autocomplete="off">
+      <button type="button" id="searchBtn">Search</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="searchResults" style="display: none;">
+  <div class="container">
+    <div class="section-header">
+      <h2>Search Results</h2>
+      <button class="btn btn-outline" id="clearSearch">Clear</button>
+    </div>
+    <div class="cards-grid" id="resultsGrid">
+      <!-- Results populated by JS -->
+    </div>
+    <div class="loading" id="searchLoading" style="display: none;">
+      <div class="spinner"></div>
+    </div>
+    <div class="empty-state" id="noResults" style="display: none;">
+      <div class="empty-state-icon">🔍</div>
+      <h3>No movies found</h3>
+      <p>Try a different search term</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Recent Reviews</h2>
+      <a href="/all-reviews" class="view-all">View all →</a>
+    </div>
+    
+    <% if (reviews && reviews.length > 0) { %>
+      <div class="cards-grid">
+        <% reviews.slice(0, 6).forEach(review => { %>
+          <div class="review-card">
+            <div class="review-card-header">
+              <% if (review.movieId) { %>
+                <a href="/movie/<%= review.movieId.imdbID %>" class="review-card-poster">
+                  <% if (review.movieId.poster && review.movieId.poster !== 'N/A') { %>
+                    <img src="<%= review.movieId.poster %>" alt="<%= review.movieId.title %>">
+                  <% } else { %>
+                    <div class="no-poster" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-secondary);">🎬</div>
+                  <% } %>
+                </a>
+              <% } %>
+              <div class="review-card-meta">
+                <h3>
+                  <% if (review.movieId) { %>
+                    <a href="/movie/<%= review.movieId.imdbID %>"><%= review.movieId.title %></a>
+                  <% } else { %>
+                    Unknown Movie
+                  <% } %>
+                </h3>
+                <p class="reviewer">by <%= review.reviewerName %></p>
+                <div class="rating">
+                  <% for (let i = 1; i <= 5; i++) { %>
+                    <span class="star <%= i <= review.rating ? 'filled' : '' %>">★</span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <p class="review-card-comment"><%= review.comment.length > 120 ? review.comment.substring(0, 120) + '...' : review.comment %></p>
+            <div class="review-card-footer">
+              <span class="review-date"><%= new Date(review.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <h3>No reviews yet</h3>
+        <p>Search for a movie and be the first to leave a review!</p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchResults = document.getElementById('searchResults');
+  const resultsGrid = document.getElementById('resultsGrid');
+  const searchLoading = document.getElementById('searchLoading');
+  const noResults = document.getElementById('noResults');
+  const clearSearch = document.getElementById('clearSearch');
+
+  async function performSearch() {
+    const query = searchInput.value.trim();
+    if (!query) return;
+
+    searchResults.style.display = 'block';
+    resultsGrid.innerHTML = '';
+    searchLoading.style.display = 'flex';
+    noResults.style.display = 'none';
+
+    try {
+      const res = await fetch(`/movies/search?q=${encodeURIComponent(query)}`);
+      const data = await res.json();
+
+      searchLoading.style.display = 'none';
+
+      if (data.success && data.data.length > 0) {
+        data.data.forEach(movie => {
+          const card = document.createElement('a');
+          card.href = `/movie/${movie.imdbID}`;
+          card.className = 'movie-card';
+          card.innerHTML = `
+            <div class="movie-card-poster">
+              ${movie.Poster && movie.Poster !== 'N/A' 
+                ? `<img src="${movie.Poster}" alt="${movie.Title}">`
+                : `<div class="no-poster">🎬</div>`
+              }
+            </div>
+            <div class="movie-card-info">
+              <h3>${movie.Title}</h3>
+              <span class="year">${movie.Year}</span>
+            </div>
+          `;
+          resultsGrid.appendChild(card);
+        });
+      } else {
+        noResults.style.display = 'block';
+      }
+    } catch (err) {
+      searchLoading.style.display = 'none';
+      noResults.style.display = 'block';
+      noResults.querySelector('h3').textContent = 'Search failed';
+      noResults.querySelector('p').textContent = 'Please try again later';
+    }
+  }
+
+  searchBtn.addEventListener('click', performSearch);
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') performSearch();
+  });
+
+  clearSearch.addEventListener('click', () => {
+    searchInput.value = '';
+    searchResults.style.display = 'none';
+    resultsGrid.innerHTML = '';
+  });
+</script>
+
+<%- include('partials/footer') %>
+
