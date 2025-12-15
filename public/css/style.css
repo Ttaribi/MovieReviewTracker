@@ -1,4 +1,3 @@
-/* ===== CSS Variables ===== */
 :root {
   --bg-primary: #F7F5F3;
   --bg-secondary: #EFECE8;
@@ -14,7 +13,6 @@
   --shadow-hover: rgba(45, 41, 38, 0.15);
 }
 
-/* ===== Reset & Base ===== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -34,7 +32,6 @@ body {
   min-height: 100vh;
 }
 
-/* ===== Typography ===== */
 h1, h2, h3, h4 {
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 600;
@@ -56,14 +53,12 @@ a {
 
 a:hover { color: var(--accent-hover); }
 
-/* ===== Layout ===== */
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-/* ===== Header ===== */
 header {
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
@@ -131,7 +126,6 @@ nav a:hover::after { width: 100%; }
 nav a.active { color: var(--accent); }
 nav a.active::after { width: 100%; }
 
-/* ===== Hero Section ===== */
 .hero {
   padding: 4rem 0 3rem;
   text-align: center;
@@ -148,7 +142,6 @@ nav a.active::after { width: 100%; }
   margin: 0 auto 2rem;
 }
 
-/* ===== Search Box ===== */
 .search-box {
   max-width: 550px;
   margin: 0 auto;
@@ -203,7 +196,6 @@ nav a.active::after { width: 100%; }
   transform: translateY(-50%) scale(0.98);
 }
 
-/* ===== Section ===== */
 .section {
   padding: 3rem 0;
 }
@@ -238,14 +230,12 @@ nav a.active::after { width: 100%; }
   gap: 0.25rem;
 }
 
-/* ===== Cards Grid ===== */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
-/* ===== Movie Card ===== */
 .movie-card {
   background: var(--bg-card);
   border-radius: 12px;
@@ -299,7 +289,6 @@ nav a.active::after { width: 100%; }
   color: var(--text-muted);
 }
 
-/* ===== Review Card ===== */
 .review-card {
   background: var(--bg-card);
   border-radius: 12px;
@@ -406,7 +395,6 @@ nav a.active::after { width: 100%; }
   background: var(--accent-light);
 }
 
-/* ===== Movie Detail Page ===== */
 .movie-detail {
   padding: 2rem 0 3rem;
 }
@@ -472,7 +460,6 @@ nav a.active::after { width: 100%; }
   color: var(--text-secondary);
 }
 
-/* ===== Review Form ===== */
 .review-form-section {
   background: var(--bg-card);
   border-radius: 16px;
@@ -547,7 +534,6 @@ nav a.active::after { width: 100%; }
   color: var(--accent);
 }
 
-/* ===== Buttons ===== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -594,7 +580,6 @@ nav a.active::after { width: 100%; }
   color: var(--accent);
 }
 
-/* ===== Messages ===== */
 .message {
   padding: 1rem 1.25rem;
   border-radius: 8px;
@@ -614,7 +599,6 @@ nav a.active::after { width: 100%; }
   border: 1px solid #A5D6A7;
 }
 
-/* ===== Empty State ===== */
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -632,7 +616,6 @@ nav a.active::after { width: 100%; }
   margin-bottom: 0.5rem;
 }
 
-/* ===== Loading ===== */
 .loading {
   display: flex;
   justify-content: center;
@@ -652,7 +635,6 @@ nav a.active::after { width: 100%; }
   to { transform: rotate(360deg); }
 }
 
-/* ===== Footer ===== */
 footer {
   background: var(--bg-secondary);
   padding: 2rem 0;
@@ -666,7 +648,6 @@ footer p {
   color: var(--text-muted);
 }
 
-/* ===== Responsive ===== */
 @media (max-width: 768px) {
   h1 { font-size: 2rem; }
   
